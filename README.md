@@ -1,4 +1,3 @@
-cloudadmin
-==========
+The OpenShift `jbossas` cartridge documentation can be found at:
 
-this for administrator cloud data and system
+http://openshift.github.io/documentation/oo_cartridge_guide.html#jbossas
