@@ -74,14 +74,13 @@
             		userlogedin +='<div class="chat-body clearfix"><div class="header"><strong class="primary-font">'+this+'</strong>';
             		userlogedin +='<smallclass="pull-right text-muted"><i class="fa fa-clock-o fa-fw"></i> 12 mins ago</small>';
             		userlogedin +='</div></div></li>';
-            		sb[sb.length] = userlogedin;
+            		//sb[sb.length] = userlogedin;
             	} else { //peer users
             		//otheruser =	"<span onclick=\"javascript:createWindow('" + $.cometChat.loginUserName + "', '" + this + "');\"  style=\"cursor: pointer;color: #0000FF;\">" + this + "</span><br>";
-            		var otheruser = "<li class=\"left clearfix\"><span class=\"chat-img pull-left\" onclick=\"javascript:createWindow('" + $.cometChat.loginUserName + "', '" + this + "');\">"; 
-            		otheruser +='<img src="http://placehold.it/40/55C1E7/fff" alt="User Avatar" class="img-circle" /></span>';
-            		otheruser +='<div class="chat-body clearfix"><div class="header"><strong class="primary-font">'+this+'</strong>';
-            		otheruser +='<smallclass="pull-right text-muted"><i class="fa fa-clock-o fa-fw"></i> 12 mins ago</small>';
-            		otheruser +='</div></div></li>';
+            		var otheruser = "<li class=\"left clearfix\" onclick=\"javascript:createWindow('" + $.cometChat.loginUserName + "', '" + this + "');\">"; 
+            		otheruser +='<div class="header"><i alt="User Avatar" class="fa fa-user fa-fw"></i><strong class="primary-font">'+this+'</strong>';
+            		otheruser +='<smallclass="pull-left text-muted"><i class="fa fa-clock-o fa-fw"></i> 12 mins ago</small>';
+            		otheruser +='</div></li>';
             		sb[sb.length] = otheruser;
             	}
             });

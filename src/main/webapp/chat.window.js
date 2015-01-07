@@ -72,14 +72,14 @@ function ChatWindow(config) {
     	if (fromUser == loginUser) {
     		userlogedin = '<li class="left clearfix"><span class="chat-img pull-left">'; 
     		userlogedin +='<img src="http://placehold.it/30/FA6F57/fff" alt="User Avatar" class="img-circle" /></span>';
-    		userlogedin +='<div class="chat-body clearfix"><div class="header"><strong class="primary-font">'+fromUser+'</strong>';
+    		userlogedin +='<div class="chat-body clearfix"><div class="header"><strong class="primary-font">You</strong>';
     		userlogedin +='<smallclass="pull-right text-muted"><i class="fa fa-clock-o fa-fw"></i> 12 mins ago</small>';
     		userlogedin +='</div><p id="gotmessage">'+text+'</p></div></li>';
     	} else {
     		
     		userlogedin = '<li class="right clearfix">'; 
     		userlogedin +='<span class="chat-img pull-right"> <img src="http://placehold.it/30/55C1E7/fff" alt="User Avatar" class="img-circle" /> </span>';
-    		userlogedin +='<div class="chat-body clearfix"> <div class="header"><small class=" text-muted"><i class="fa fa-clock-o fa-fw"></i> 13 mins ago</small><strong class="pull-right primary-font">Bhaumik Patel</strong></div>';
+    		userlogedin +='<div class="chat-body clearfix"> <div class="header"><small class=" text-muted"><i class="fa fa-clock-o fa-fw"></i> 13 mins ago</small><strong class="pull-right primary-font">'+fromUser+'</strong></div>';
       		userlogedin +='</div><p id="gotmessage">'+text+'</p></div></li>';    		
     		 
     	}
@@ -197,6 +197,7 @@ function ChatWindow(config) {
     	windowDIV.appendChild(chatfooter); 
     	
     	var textInput = $(windowDIV).find("#btn-input")[0];
+    	var sendBtn = $(windowDIV).find("#btn-chat")[0];
     	$(textInput).attr("id", this.getTextInputID());
     	//textInput.setAttribute("type", "text");
     	$(textInput).attr("name", "chatInput");
@@ -210,8 +211,16 @@ function ChatWindow(config) {
             	$(textInput).focus();
             }
         });
+        $(sendBtn).on("click", function() {
+            	$.cometChat.send($(textInput).val(), _self.getPeerUserName());
+            	$(textInput).val('');
+            	$(textInput).focus();
+        });
+        
     	
-    	//$(windowDIV).find("#chatclose").on("click", this.hide(_self));
+    	$(windowDIV).find("#chatclose").on("click", function(){
+    		$("#" + _self.getWindowID()).css("display", "none");
+    	});
     	return windowDIV;
     };
     

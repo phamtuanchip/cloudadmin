@@ -110,7 +110,7 @@
 	});
 </script>
 	<div class="panel panel-green" style="width: 300px;">
-		<div class="panel-heading"><i class="fa fa-user fa-fw"></i>Online users</div>
+		<div class="panel-heading"><i class="fa fa-group fa-fw"></i>Online users</div>
 		<div class="panel-body">
 			<div class="chat" id="members">
 				<ul class="chat" id="online">
@@ -118,7 +118,7 @@
 				</ul>
 			</div>
 		</div>
-		<div class="panel-footer">Panel Footer</div>
+<!-- 		<div class="panel-footer">Panel Footer</div> -->
 	</div>
 
 
@@ -127,10 +127,10 @@
 			<div class="panel-heading" id="chatheader">
 				<i class="fa fa-comments fa-fw"></i> Chat with: <span></span>
 				<div class="btn-group pull-right">
-					<button type="button"
+					<button id="chatclose" type="button"
 						class="btn btn-default btn-xs dropdown-toggle"
 						data-toggle="dropdown">
-						<i class="fa fa-times" id="chatclose"></i>
+						<i class="fa fa-times"></i>
 					</button>
 					 
 				</div>
