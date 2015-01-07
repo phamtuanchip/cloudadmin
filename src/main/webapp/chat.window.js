@@ -7,8 +7,8 @@ function ChatWindow(config) {
     var _peerUserName;
     var _loginUserName;
     var _config;
-    this._windowWidth  = 200;
-    this._windowHeight = 200;
+    this._windowWidth  = 300;
+    this._windowHeight = 400;
     this.lastUser      = null;
     this.windowArray   = [];
    
@@ -38,10 +38,12 @@ function ChatWindow(config) {
     
     this.hide = function(_self) {
     	$("#" + _self.getWindowID()).css("display", "none");
+    	//$("#chatbox").css("display", "none");
     };
     
     this.show = function() {
     	$("#" + this.getWindowID()).css("display", "block");
+    	//$("#chatbox").css("display", "block");
     };
     
     /**
@@ -63,16 +65,23 @@ function ChatWindow(config) {
     };
     
     this.appendMessage = function(fromUser, text, loginUser) {
-    	
     	var userNameCssClass    = "";
     	var textMessageCssClass = "";
-    	
+    	var userlogedin ="";
+		
     	if (fromUser == loginUser) {
-    		userNameCssClass    = "fromUserName";
-        	textMessageCssClass = "fromMessage";
+    		userlogedin = '<li class="left clearfix"><span class="chat-img pull-left">'; 
+    		userlogedin +='<img src="http://placehold.it/30/FA6F57/fff" alt="User Avatar" class="img-circle" /></span>';
+    		userlogedin +='<div class="chat-body clearfix"><div class="header"><strong class="primary-font">'+fromUser+'</strong>';
+    		userlogedin +='<smallclass="pull-right text-muted"><i class="fa fa-clock-o fa-fw"></i> 12 mins ago</small>';
+    		userlogedin +='</div><p id="gotmessage">'+text+'</p></div></li>';
     	} else {
-    		userNameCssClass    = "toUserName";
-        	textMessageCssClass = "toMessage";
+    		
+    		userlogedin = '<li class="right clearfix">'; 
+    		userlogedin +='<span class="chat-img pull-right"> <img src="http://placehold.it/30/55C1E7/fff" alt="User Avatar" class="img-circle" /> </span>';
+    		userlogedin +='<div class="chat-body clearfix"> <div class="header"><small class=" text-muted"><i class="fa fa-clock-o fa-fw"></i> 13 mins ago</small><strong class="pull-right primary-font">Bhaumik Patel</strong></div>';
+      		userlogedin +='</div><p id="gotmessage">'+text+'</p></div></li>';    		
+    		 
     	}
     	
     	if (this.lastUser == fromUser) {
@@ -82,10 +91,7 @@ function ChatWindow(config) {
     		fromUser += ':';
     	}
     	var chatContainer = $("#" + this.getMessageContainerID());
-    	var sb = [];
-    	sb[sb.length] = '<span class="' + userNameCssClass + '">' + fromUser + '</span>';
-    	sb[sb.length] = '<span class="' + textMessageCssClass + '">' + text + '</span><br/>';
-    	chatContainer.append(sb.join(""));  
+    	chatContainer.find("#chatmessage").append(userlogedin);  
     	chatContainer[0].scrollTop = chatContainer[0].scrollHeight - chatContainer.outerHeight();
     };
     
@@ -119,9 +125,9 @@ function ChatWindow(config) {
     	//create text input
     	var textInput = document.createElement("input");
     	textInput.setAttribute("id", this.getTextInputID());
-    	textInput.setAttribute("type", "text");
+    	//textInput.setAttribute("type", "text");
     	textInput.setAttribute("name", "chatInput");
-    	textInput.setAttribute("class", "chatInput");
+    	//textInput.setAttribute("class", "chatInput");
     	
     	$(textInput).attr('autocomplete', 'off');
         $(textInput).keyup(function(e) {
@@ -163,22 +169,49 @@ function ChatWindow(config) {
     };
     
     this.getWindowHTML = function() {
-    	
-    	var windowDIV = document.createElement("div");
+    	var chatemplete = $("#chatemplate");
+    	var windowDIV = document.createElement("div"); //$("#chatbox")[0];
     	windowDIV.setAttribute("id", this.getWindowID());
     	windowDIV.style.width  = this._windowWidth + "px"; 
     	windowDIV.style.height = this._windowHeight +"px";
-    	windowDIV.style.backgroundColor = '#FFFFFF'; 
+    	//windowDIV.style.backgroundColor = '#FFFFFF'; 
+    	windowDIV.setAttribute("class","chat-panel panel panel-default");
     	windowDIV.style.position = 'absolute';
     	windowDIV.style.bottom   = 0;
     	windowDIV.style.right    = this.getWindowLeftPosition() + "px"; 
     	windowDIV.style.zIndex   = 100;
-    	windowDIV.style.border   = '1px solid #31B404'; 
+    	//windowDIV.style.border   = '1px solid #31B404'; 
     	
-    	windowDIV.appendChild(this.getWindowHeader()); 
-    	windowDIV.appendChild(this.getWindowBody());
-    	windowDIV.appendChild(this.getWindowFooter()); 
+    	var chatheader =  $(chatemplete).find("#chatheader").clone()[0];
+    	$(chatheader).find("span")[0].innerHTML = this.getPeerUserName();
     	
+    	var chatcontent = $(chatemplete).find("#chatcontent").clone()[0];
+    	$(chatcontent).attr("id", this.getMessageContainerID());
+    	
+    	var chatfooter = $(chatemplete).find("#chatfooter").clone()[0];
+    	
+    	
+        
+    	windowDIV.appendChild(chatheader); 
+    	windowDIV.appendChild(chatcontent);
+    	windowDIV.appendChild(chatfooter); 
+    	
+    	var textInput = $(windowDIV).find("#btn-input")[0];
+    	$(textInput).attr("id", this.getTextInputID());
+    	//textInput.setAttribute("type", "text");
+    	$(textInput).attr("name", "chatInput");
+    	//textInput.setAttribute("class", "chatInput");
+    	
+    	$(textInput).attr('autocomplete', 'off');
+        $(textInput).keyup(function(e) {
+            if (e.keyCode == 13) {
+            	$.cometChat.send($(textInput).val(), _self.getPeerUserName());
+            	$(textInput).val('');
+            	$(textInput).focus();
+            }
+        });
+    	
+    	//$(windowDIV).find("#chatclose").on("click", this.hide(_self));
     	return windowDIV;
     };
     

@@ -53,7 +53,6 @@
 		send:function(textMessage, peerUserName) {
             
 			if (!textMessage || !textMessage.length) return;
-
             $.cometd.publish('/service/privatechat', {
                 room: '/chat/demo',
                 user: $.cometChat.loginUserName,
@@ -70,12 +69,23 @@
             var sb = [];
             $.each(message.data, function() {
             	if ($.cometChat.loginUserName == this) { //login user
-            		sb[sb.length] = "<span style=\";color: #FF0000;\">" + this + "</span><br>";
+            		var userlogedin = '<li class="left clearfix"><span class="chat-img pull-left">'; 
+            		userlogedin +='<img src="http://placehold.it/40/FA6F57/fff" alt="User Avatar" class="img-circle" /></span>';
+            		userlogedin +='<div class="chat-body clearfix"><div class="header"><strong class="primary-font">'+this+'</strong>';
+            		userlogedin +='<smallclass="pull-right text-muted"><i class="fa fa-clock-o fa-fw"></i> 12 mins ago</small>';
+            		userlogedin +='</div></div></li>';
+            		sb[sb.length] = userlogedin;
             	} else { //peer users
-            		sb[sb.length] = "<span onclick=\"javascript:createWindow('" + $.cometChat.loginUserName + "', '" + this + "');\"  style=\"cursor: pointer;color: #0000FF;\">" + this + "</span><br>";
+            		//otheruser =	"<span onclick=\"javascript:createWindow('" + $.cometChat.loginUserName + "', '" + this + "');\"  style=\"cursor: pointer;color: #0000FF;\">" + this + "</span><br>";
+            		var otheruser = "<li class=\"left clearfix\"><span class=\"chat-img pull-left\" onclick=\"javascript:createWindow('" + $.cometChat.loginUserName + "', '" + this + "');\">"; 
+            		otheruser +='<img src="http://placehold.it/40/55C1E7/fff" alt="User Avatar" class="img-circle" /></span>';
+            		otheruser +='<div class="chat-body clearfix"><div class="header"><strong class="primary-font">'+this+'</strong>';
+            		otheruser +='<smallclass="pull-right text-muted"><i class="fa fa-clock-o fa-fw"></i> 12 mins ago</small>';
+            		otheruser +='</div></div></li>';
+            		sb[sb.length] = otheruser;
             	}
             });
-            $('#' + $.cometChat.memberListContainerID).html(sb.join("")); 
+            $('#' + $.cometChat.memberListContainerID).find("#online").html(sb.join("")); 
         },
         
         /**
@@ -86,7 +96,6 @@
             var fromUser = message.data.user;
             var text     = message.data.chat;
             var toUser   = message.data.peer;
-            
             //Handle receiving messages
             if ($.cometChat.loginUserName == toUser) {
             	//'toUser' is the loginUser and 'fromUser' is the peer user.
