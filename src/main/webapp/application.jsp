@@ -107,8 +107,44 @@
 	$(document).ready(function(){ 
 		$.cometChat.onLoad({memberListContainerID:'members'});
 		join(userName);
+		
+// 		 $.cometd.configure({
+// 		        url: location.protocol + '//' + location.host + config.contextPath + '/cometd',
+// 		        logLevel: 'info'
+// 		    });
+		 $.cometd.addListener('/meta/handshake', function(message)
+				    {
+				        if (message.successful)
+				        { 
+		$.cometd.subscribe('/stock/*', function(message)
+	            {
+					
+	                var data = message.data;
+	                var symbol = data.symbol;
+	                var value = data.newValue;
+					console.info("update success" + symbol)	;
+	                // Find the div for the given stock symbol
+	                var id = 'stock_' + symbol;
+	                var symbolDiv = $(id)[0];
+	                if (!symbolDiv)
+	                {
+	                    symbolDiv = ('<div id="' + id + '"></div>', $('#stocks'));
+	                }
+	                symbolDiv.innerHTML = '<span>' + symbol + ': ' + value + '</span>';
+	            });
+				        }
+				    });
+		// $.cometd.handshake();
 	});
+		 
+
 </script>
+
+ 
+    <div id="status"></div>
+
+    <div id="stocks"></div>
+    
 	<div class="panel panel-green" style="width: 300px;">
 		<div class="panel-heading"><i class="fa fa-group fa-fw"></i>Online users</div>
 		<div class="panel-body">
