@@ -2,6 +2,7 @@ package com.cloud.admin.cometd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
@@ -12,21 +13,28 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.cloud.admin.model.Notification;
+
 public class StockPriceEmitter implements Runnable
 {
+	public final static String NOTIFICATION_TASK = "NOTIFICATION_TASK"; 
+	public final static String NOTIFICATION_EMAIL = "NOTIFICATION_EMAIL";
+	public final static String NOTIFICATION_MESSAGE = "NOTIFICATION_MESSAGE";
+	public final static String NOTIFICATION_COMMENT = "NOTIFICATION_COMMENT";
+	public final static String NOTIFICATION_INFO = "NOTIFICATION_INFO";
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private final List<String> symbols = new ArrayList<String>();
-    private final Map<String, Float> values = new HashMap<String, Float>();
+    private final Map<String, Notification> values = new HashMap<String, Notification>();
     private final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
 
     public StockPriceEmitter()
     {
-        symbols.addAll(Arrays.asList("ORCL", "MSFT", "GOOG", "YHOO", "FB"));
-        values.put("ORCL", 29.94f);
-        values.put("MSFT", 27.10f);
-        values.put("GOOG", 655.37f);
-        values.put("YHOO", 17.82f);
-        values.put("FB", 21.33f);
+        symbols.addAll(Arrays.asList(NOTIFICATION_TASK, NOTIFICATION_EMAIL, NOTIFICATION_MESSAGE, NOTIFICATION_INFO, NOTIFICATION_COMMENT));
+        values.put(NOTIFICATION_TASK, new Notification(NOTIFICATION_TASK));
+        values.put(NOTIFICATION_EMAIL, new Notification(NOTIFICATION_EMAIL));
+        values.put(NOTIFICATION_MESSAGE, new Notification(NOTIFICATION_MESSAGE));
+        values.put(NOTIFICATION_INFO, new Notification(NOTIFICATION_INFO));
+        values.put(NOTIFICATION_COMMENT, new Notification(NOTIFICATION_COMMENT));
     }
 
     public List<Listener> getListeners()
@@ -57,12 +65,12 @@ public class StockPriceEmitter implements Runnable
             // Randomly choose which one to update
             int which = random.nextInt(symbols.size());
             String symbol = symbols.get(which);
-            float oldValue = values.get(symbol);
+            Notification oldValue = values.get(symbol);
 
             // Randomly choose how much to update
             boolean sign = random.nextBoolean();
             float howMuch = random.nextFloat();
-            float newValue = oldValue + (sign ? howMuch : -howMuch);
+            Notification newValue = new Notification(symbol, new Date(), "update: " + howMuch, "Content"); 
 
             // Store the new value
             values.put(symbol, newValue);
@@ -85,10 +93,10 @@ public class StockPriceEmitter implements Runnable
     public static class Update
     {
         private final String symbol;
-        private final float oldValue;
-        private final float newValue;
+        private final Notification oldValue;
+        private final Notification newValue;
 
-        public Update(String symbol, float oldValue, float newValue)
+        public Update(String symbol, Notification oldValue, Notification newValue)
         {
             this.symbol = symbol;
             this.oldValue = oldValue;
@@ -100,12 +108,12 @@ public class StockPriceEmitter implements Runnable
             return symbol;
         }
 
-        public float getOldValue()
+        public Notification getOldValue()
         {
             return oldValue;
         }
 
-        public float getNewValue()
+        public Notification getNewValue()
         {
             return newValue;
         }
