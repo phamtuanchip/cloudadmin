@@ -17,4 +17,8 @@ public class Notification {
 		this.title = title;
 		this.content = content;
 	}
+	
+	public String toString(){
+		return "[]";
+	}
 }

@@ -123,7 +123,11 @@
 	                var data = message.data;
 	                var symbol = data.symbol;
 	                var value = data.newValue;
-					console.info("update success" + symbol)	;
+	                var aTag = $("#"+symbol.split("_")[0]).find("#_"+symbol.split("_")[1]);
+	                aTag.css("color", "blue");
+	                aTag.css("text-decoration","blink");
+	               
+					console.info("update success" + data.newValue)	;
 	                // Find the div for the given stock symbol
 	                var id = 'stock_' + symbol;
 	                var symbolDiv = $(id)[0];
@@ -167,9 +171,7 @@
                         <div class="panel-body">
                             <div class="list-group">
                                 <a href="#" class="list-group-item" id="_COMMENT">
-                                    <i class="fa fa-comment fa-fw"></i> 
-                                    <span class="count">2</span>
-									<span class="circle"></span>
+                                    <i class="fa fa-comment fa-fw"></i>
                                     New Comment
                                     <span class="pull-right text-muted small"><em>4 minutes ago</em>
                                     </span>
